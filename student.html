@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نموذج تسجيل الطلاب - بوابة بنك الألعاب التفاعلي</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #eef6fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+        .wrapper {
+            background: #ffffff;
+            margin-top: 2rem;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 95%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: #2c7a7b;
+        }
+        form label {
+            display: block;
+            margin-bottom: 0.2rem;
+            font-weight: bold;
+        }
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        form button {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: #2c7a7b;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        form button:hover {
+            background-color: #236d6e;
+        }
+        /* إحصائيات الزيارات - تصميم مشابه للبوابة الأصلية */
+        .stats {
+            background: #e6f7ff;
+            border: 2px solid #9bd5f7;
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            color: #0c4767;
+        }
+        .stats h2 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+            color: #045d75;
+        }
+        .stats p {
+            margin: 0.3rem 0;
+        }
+        #logTableContainer {
+            display: none;
+            margin-top: 1rem;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        th, td {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        #showLogBtn {
+            margin-top: 1rem;
+            background-color: #4299e1;
+        }
+        #showLogBtn:hover {
+            background-color: #3182ce;
+        }
+
+        /* تكبير أرقام العداد وإبرازها بلون مختلف */
+        .stats strong {
+            font-size: 1.1rem;
+            color: #2c7a7b;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h1>🎮 بوابة بنك الألعاب التفاعلي – تسجيل الطالب</h1>
+        <form id="studentForm">
+            <label for="name">اسم الطالب / الطالبة</label>
+            <input type="text" id="name" placeholder="اكتب اسم الطالب/ـة" required />
+
+            <label for="stage">المرحلة التعليمية</label>
+            <select id="stage" required>
+                <option value="" disabled selected>اختر المرحلة</option>
+                <option value="المرحلة الإبتدائية">المرحلة الإبتدائية</option>
+                <option value="المرحلة المتوسطة">المرحلة المتوسطة</option>
+                <option value="المرحلة الثانوية">المرحلة الثانوية</option>
+            </select>
+
+            <label for="grade">الصف الدراسي</label>
+            <input type="text" id="grade" placeholder="مثال: الصف الثالث الابتدائي" required />
+
+            <label for="semester">الفصل الدراسي</label>
+            <select id="semester" required>
+                <option value="" disabled selected>اختر الفصل الدراسي</option>
+                <option value="الفصل الدراسي الأول">الفصل الدراسي الأول</option>
+                <option value="الفصل الدراسي الثاني">الفصل الدراسي الثاني</option>
+            </select>
+
+            <label for="plan">نوع الخطة (اختياري)</label>
+            <select id="plan">
+                <option value="دخول مباشر بنك الألعاب" selected>دخول مباشر بنك الألعاب</option>
+                <option value="خطة اثرائية">خطة اثرائية</option>
+            </select>
+
+            <button type="submit">دخول إلى بنك الألعاب</button>
+        </form>
+
+        <div class="stats" id="stats">
+            <h2>📊 إحصائيات الزيارات</h2>
+            <p>إجمالي الزيارات: <strong id="totalVisits">0</strong></p>
+            <p>المرحلة الإبتدائية: <strong id="primaryVisits">0</strong></p>
+            <p>المرحلة المتوسطة: <strong id="middleVisits">0</strong></p>
+            <p>المرحلة الثانوية: <strong id="highVisits">0</strong></p>
+            <p>دخول مباشر: <strong id="directVisits">0</strong></p>
+            <p>الخطط الإثرائية: <strong id="enrichmentVisits">0</strong></p>
+        </div>
+
+        <button id="showLogBtn">عرض سجل الزوار الكامل</button>
+        <div id="logTableContainer">
+            <table id="logTable">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>المرحلة</th>
+                        <th>الصف</th>
+                        <th>الفصل</th>
+                        <th>نوع الخطة</th>
+                        <th>التاريخ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- visitor rows will be injected here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // روابط كل مرحلة، مخزنة بشكل مشفّر (base64) للمحافظة على الأمن وإخفاء عناوين الصفحات
+            const encodedLinks = {
+                'المرحلة الإبتدائية': {
+                    direct: 'aHR0cHM6Ly8zNnByaW1lcnktc2Nob29sLm15LmNhbnZhLnNpdGUvZGFnN2VzaG9tbXE=',
+                    plan:   'aHR0cHM6Ly9naGFsYmEtYWxoYXJiaS5teS5jYW52YS5zaXRlL2RhZzczMHVwNHRh'
+                },
+                'المرحلة المتوسطة': {
+                    direct: 'aHR0cHM6Ly8zNnByaW1lcnktc2Nob29sLm15LmNhbnZhLnNpdGUvZGFnN2UwdG4xYTQ=',
+                    plan:   'aHR0cHM6Ly8zNi1wcmltYXJ5LXNjaG9vbC5teS5jYW52YS5zaXRlL2J2ZThzNmJ4cGprenhzMg=='
+                },
+                'المرحلة الثانوية': {
+                    direct: 'aHR0cHM6Ly8zNnByaW1lcnktc2Nob29sLm15LmNhbnZhLnNpdGUvZGFnN2ZkdjRsZjQ=',
+                    plan:   'aHR0cHM6Ly9zYXJhLTIxLm15LmNhbnZhLnNpdGUvYnd4ZGFmbXFhdjRxNzBrZw=='
+                }
+            };
+
+            // دالة لفك تشفير الروابط
+            function decodeLink(encoded) {
+                try {
+                    return atob(encoded);
+                } catch (e) {
+                    return '#';
+                }
+            }
+
+            // تحميل الإحصائيات من localStorage عند فتح الصفحة
+            function loadStats() {
+                const stats = JSON.parse(localStorage.getItem('stats')) || {
+                    total: 0,
+                    primary: 0,
+                    middle: 0,
+                    high: 0,
+                    direct: 0,
+                    plan: 0
+                };
+                document.getElementById('totalVisits').textContent = stats.total;
+                document.getElementById('primaryVisits').textContent = stats.primary;
+                document.getElementById('middleVisits').textContent = stats.middle;
+                document.getElementById('highVisits').textContent = stats.high;
+                document.getElementById('directVisits').textContent = stats.direct;
+                document.getElementById('enrichmentVisits').textContent = stats.plan;
+            }
+
+            function updateStats(stage, planType) {
+                const stats = JSON.parse(localStorage.getItem('stats')) || {
+                    total: 0,
+                    primary: 0,
+                    middle: 0,
+                    high: 0,
+                    direct: 0,
+                    plan: 0
+                };
+                stats.total++;
+                if (stage === 'المرحلة الإبتدائية') {
+                    stats.primary++;
+                } else if (stage === 'المرحلة المتوسطة') {
+                    stats.middle++;
+                } else if (stage === 'المرحلة الثانوية') {
+                    stats.high++;
+                }
+                // عدّ زوار البنك المباشر والخطط الإثرائية
+                if (planType === 'خطة اثرائية') {
+                    stats.plan++;
+                } else {
+                    stats.direct++;
+                }
+                localStorage.setItem('stats', JSON.stringify(stats));
+            }
+
+            function saveVisitor(entry) {
+                let visitors = [];
+                try {
+                    visitors = JSON.parse(localStorage.getItem('visitors')) || [];
+                } catch (e) {
+                    visitors = [];
+                }
+                visitors.push(entry);
+                // Limit the log to 200 entries. Remove oldest if exceeding.
+                const limit = 200;
+                if (visitors.length > limit) {
+                    visitors = visitors.slice(visitors.length - limit);
+                }
+                try {
+                    localStorage.setItem('visitors', JSON.stringify(visitors));
+                } catch (e) {
+                    // If saving fails, ignore but still keep stats
+                }
+            }
+
+            function populateLogTable() {
+                const tbody = document.querySelector('#logTable tbody');
+                tbody.innerHTML = '';
+                let visitors = [];
+                try {
+                    visitors = JSON.parse(localStorage.getItem('visitors')) || [];
+                } catch (e) {
+                    visitors = [];
+                }
+                visitors.forEach((v, idx) => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td>${idx + 1}</td><td>${v.name}</td><td>${v.stage}</td><td>${v.grade}</td><td>${v.semester}</td><td>${v.plan}</td><td>${new Date(v.timestamp).toLocaleString('ar-EG')}</td>`;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('studentForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                let name = document.getElementById('name').value.trim();
+                // إزالة أية أحرف قد تحتوي على تعليمات HTML لحماية البيانات
+                name = name.replace(/[<>]/g, '');
+                const stage = document.getElementById('stage').value;
+                const grade = document.getElementById('grade').value.trim();
+                const semester = document.getElementById('semester').value;
+                const plan = document.getElementById('plan').value;
+                if (!name) {
+                    alert('يرجى إدخال اسم الطالب/ـة.');
+                    return;
+                }
+                // Update counters including type of plan
+                updateStats(stage, plan);
+                // Save visitor entry
+                const entry = { name, stage, grade, semester, plan, timestamp: new Date().toISOString() };
+                saveVisitor(entry);
+                // تحديد الرابط بناءً على المرحلة ونوع الخطة (مع فك التشفير)
+                let link;
+                if (plan === 'خطة اثرائية') {
+                    link = decodeLink(encodedLinks[stage].plan);
+                } else {
+                    link = decodeLink(encodedLinks[stage].direct);
+                }
+                // إعادة توجيه المستخدم بعد حفظ البيانات وتحديث الإحصاءات
+                window.location.href = link;
+            });
+
+            document.getElementById('showLogBtn').addEventListener('click', function() {
+                const container = document.getElementById('logTableContainer');
+                if (container.style.display === 'none' || container.style.display === '') {
+                    populateLogTable();
+                    container.style.display = 'block';
+                    this.textContent = 'إخفاء سجل الزوار';
+                } else {
+                    container.style.display = 'none';
+                    this.textContent = 'عرض سجل الزوار الكامل';
+                }
+            });
+
+            // initialise stats on load
+            loadStats();
+        })();
+    </script>
+</body>
+</html>
