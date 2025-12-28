@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة بنك الألعاب التفاعلي</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f7fbff;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 95%;
+            max-width: 600px;      /* يحافظ على شكل جيد في الشاشات الكبيرة */
+            text-align: center;
+            margin: 2rem auto;
+            box-sizing: border-box;
+        }
+        h1 {
+            margin-bottom: 1.5rem;
+            color: #2c7a7b;
+        }
+        select, button {
+            width: 100%;
+            padding: 0.8rem;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #2c7a7b;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #236d6e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎮 بوابة بنك الألعاب التفاعلي</h1>
+        <p>اختر نوع المستخدم للدخول:</p>
+        <select id="roleSelect">
+            <option value="" disabled selected>اختر من القائمة</option>
+            <option value="student">الطالب / الطالبة</option>
+            <option value="teacher">المعلم / المعلمة</option>
+        </select>
+        <button id="enterButton">ابدأ</button>
+    </div>
+    <script>
+        (function() {
+            // الرابط المشفر لصفحة المعلم/ة لمنع عرضه بشكل صريح
+            const encodedTeacherLink = 'aHR0cHM6Ly8zNnByaW1lcnktc2Nob29sLm15LmNhbnZhLnNpdGUvZGFnN3llci1lbTg=';
+            function decodeLink(encoded) {
+                try {
+                    return atob(encoded);
+                } catch (e) {
+                    return '#';
+                }
+            }
+            document.getElementById('enterButton').addEventListener('click', function() {
+                const role = document.getElementById('roleSelect').value;
+                if (!role) {
+                    alert('يرجى اختيار نوع المستخدم أولاً.');
+                    return;
+                }
+                if (role === 'teacher') {
+                    window.location.href = decodeLink(encodedTeacherLink);
+                } else if (role === 'student') {
+                    window.location.href = 'student.html';
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
